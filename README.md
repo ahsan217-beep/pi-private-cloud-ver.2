@@ -1,8 +1,26 @@
-# Raspberry Pi 5 Private Cloud (Nextcloud + Tailscale on NVMe)
+# Raspberry Pi 5 Private Cloud, ver.2 (Nextcloud + Tailscale on NVMe)
 
 A reproducible setup guide and automation scripts to build a self-hosted private cloud on a Raspberry Pi 5 booting from an M.2 NVMe SSD, using **Nextcloud** (via Snap) and **Tailscale** for encrypted remote access from anywhere, without port forwarding or subscriptions.
 
 Based on the setup from Enrique Neyra's video [Access Your Files ANYWHERE You Go — The Ultimate Pi 5 Setup](https://www.youtube.com/watch?v=jOYG10CvZZA). The cloning step uses Jeff Geerling's [rpi-clone](https://github.com/geerlingguy/rpi-clone).
+
+---
+
+## How ver.2 differs from ver.1
+
+[ver.1 (pi-private-cloud)](https://github.com/ahsan217-beep/pi-private-cloud) builds the same idea, a private Nextcloud reachable over Tailscale, as a Docker Compose stack. ver.2 trades that flexibility for a simpler install on Raspberry Pi 5 hardware.
+
+| | ver.1: pi-private-cloud | ver.2: this repo |
+|---|---|---|
+| Hardware | Raspberry Pi 4 or 5 + USB 3 SSD | Raspberry Pi 5 + M.2 NVMe HAT and SSD |
+| Where the OS runs | MicroSD card (data, database and Nextcloud files on the SSD) | NVMe SSD (the whole system is cloned off the MicroSD card) |
+| How Nextcloud is installed | Docker Compose: Nextcloud, PostgreSQL, Redis, cron and Tailscale as separate containers | Nextcloud Snap: one package that bundles the web server, PHP, database and cache |
+| Tailscale | Runs in a container, joins with an auth key from `.env` | Installed on the Pi itself, joins with an interactive `tailscale up` login |
+| Configuration | Config files and a `.env` file, no prompts | Two interactive scripts that follow the guide step by step |
+| Updates | Nextcloud image pinned to one major version, upgraded by hand | The Snap updates itself automatically |
+| Backups | `backup.sh` (maintenance mode, database dump, rsync) | Not scripted yet |
+| Extra system change | None | Switches the Pi 5 to the 4K page-size kernel (`kernel=kernel8.img`) for the Snap |
+| Best for | Seeing and controlling every part of the stack | Getting a working cloud on a Pi 5 with the fewest steps |
 
 ---
 
